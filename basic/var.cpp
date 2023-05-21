@@ -35,7 +35,7 @@ int main()
     // int g = 10;
 
     // cout << g << endl;
-    
+
     var();
 
     var_1();

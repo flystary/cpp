@@ -54,14 +54,14 @@ void example_func()
 void example_func1(register int num) {}
 
 void stype_2()
-{   
+{
     const int NUM = 10;
     const int* ptr = &NUM;
     int const* ptr2 = &NUM;
 
-    
+
     volatile int num = 20;
-    
+
     example_func();
    //  example_func1();
 }
@@ -71,6 +71,6 @@ int main()
     stype_1();
     cout << NEWLINE;
     stype_2();
-    
+
     return 0;
 }
