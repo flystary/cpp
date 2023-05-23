@@ -1,53 +1,62 @@
 #include <iostream>
 
 using namespace std;
-/*
- *void cls()
- *{
- *   auto f = 3.14;
- *   auto s("hello");
- *   auto z = new auto(9);
- *   auto x1 = 5, x2 = 5.0, x3 = 'r';
- *}
- */
 
-void func(void);
- 
-static int count = 10; /* 全局变量 */
- 
-int cls_1()
+class Box
 {
-    while(count--)
-    {
-       func();
-    }
-    return 0;
-}
-
-void func( void )
-{
-    static int i = 5; // 局部静态变量
-    i++;
-    std::cout << "变量 i 为 " << i ;
-    std::cout << " , 变量 count 为 " << count << std::endl;
-}
-
-thread_local int x;  // 命名空间下的全局变量
-class X
-{
-    static thread_local std::string s; // 类的static成员变量
+    public:
+        double length;
+        double breadth;
+        double height;
+        double get(void);
+        void set(double len, double bre, double hei);
 };
 
-static thread_local std::string X::s;  // X::s 是需要定义的
- 
-void foo()
+double Box::get(void)
 {
-    thread_local std::vector<int> v;  // 本地变量
+    return length * breadth * height;
+}
+
+void Box::set(double len, double bre, double hei)
+{
+    length  = len;
+    breadth = bre;
+    height  = hei;
+}
+
+int class_1()
+{
+    Box     Box1;
+    Box     Box2;
+    Box     Box3;
+
+    double volume = 0.0;
+
+    Box1.height = 5.0; 
+    Box1.length = 6.0; 
+    Box1.breadth = 7.0;
+
+    Box2.height = 10.0; 
+    Box2.length = 12.0; 
+    Box2.breadth = 13.0;
+
+    volume = Box1.height * Box1.length * Box1.breadth;
+    cout << "Box1 的体积：" << volume <<endl;
+
+    volume = Box2.height * Box2.length * Box2.breadth;
+    cout << "Box2 的体积：" << volume <<endl;
+
+    Box3.set(16.0, 8.0, 12.0);
+    volume = Box3.get();
+    cout << "Box3 的体积：" << volume <<endl;
+
+    return 0;
+
 }
 
 int main()
 {
-    cls_1();
+    class_1();
 
     return 0;
 }
