@@ -32,13 +32,13 @@ int class_()
     Box Box1(3.3, 1.2, 1.5);
     Box Box2(8.5, 6.0, 2.0);
 
-    if(!Box1.compare(Box2))
+    if(Box1.compare(Box2))
     {
-        cout << "Box2 > Box1" << endl;
+        cout << "Box2 < Box1" << endl;
     }
     else
     {
-        cout << "Box2 == && < Box1" << endl;
+        cout << "Box2 == & > Box1" << endl;
     }
 
     return 0;
