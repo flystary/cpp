@@ -10,7 +10,7 @@ public:
        a1 = 1;
        a2 = 2;
        a3 = 3;
-       a  = 4; 
+       a  = 4;
     }
 
     void func() {
