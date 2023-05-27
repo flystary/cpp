@@ -57,9 +57,37 @@ double div(int a, int b)
     return (a / b);
 }
 
+#include <exception>
+struct MyException : public exception
+{
+    const char * what () const throw ()
+    {
+        return "C++ Exception";
+    }
+};
+
+int try_3()
+{
+    try {
+        throw MyException();
+    }
+    catch(MyException& e)
+    {
+        cout << "MyException caught" << endl;
+        cout << e.what() << endl;
+    }
+
+    catch(std::exception& e)
+    {
+        //other error
+    }
+}
+
 int main()
 {
+    try_1();
     try_2();
+    try_3();
 
     return 0;
 }
