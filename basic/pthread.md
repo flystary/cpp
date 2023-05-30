@@ -21,4 +21,11 @@ arg 运行函数的参数。它必须通过把引用作为指针强制转换为 
 pthread_exit (status) 
 ```
 
+### 连接和分离线程
+```C++
+
+pthread_join(threadid, status)
+pthread_detach(threadid)
+```
+
 
