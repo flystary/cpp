@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.2)
+
+project(yaml_test)
+
+add_definitions(-std=c++11)
+
+
+include_directories(include)
+set(SRCS yaml_test.cpp)
+
+find_package(yaml-cpp REQUIRED)
+include_directories(${YAML_CPP_INCLUDE_DIR})
+target_link_libraries(node_name yaml-cpp)
+
+add_executable(yamltest ${SRCS})
