@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/lichenlu/Code/cpp/cpp/cls/curl",
+      "program": "/Users/lichenlu/Code/cpp/cpp/cls/curl/build/Debug/outDebug"
+    }
+  ]
+}

@@ -18,41 +18,61 @@ size_t req_reply(void *ptr, size_t size, size_t nmemb, void *stream)
 CURLcode curl_post_req(const std::string &url, const std::string &postParams, std::string &response)
 {
 
-    CURL *curl = curl_easy_init();
-    CURLcode res;
+    CURL *curl = NULL;
+    struct curl_slist *header_list = NULL;
+    CURLcode res = CURLE_FAILED_INIT;
 
-    if (curl != 0)
+    // 初始化句柄
+    curl = curl_easy_init();
+    if (!curl)
     {
-        struct curl_slist *header_list = NULL;
-        header_list = curl_slist_append(header_list, "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko");
-        header_list = curl_slist_append(header_list, "Content-Type:application/json; charset=UTF-8");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);
-
-        curl_easy_setopt(curl, CURLOPT_HEADER, 0);
-        curl_easy_setopt(curl, CURLOPT_POST, 1);
-
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postParams.c_str());
-
-        // ssl
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
-        // CURLOPT_VERBOSE的值为1时，会显示详细的调试信息
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, NULL);
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, req_reply);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response);
-
-        curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-
-        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
-
-        res = curl_easy_perform(curl);
+        goto cleanup;
     }
 
-    curl_easy_cleanup(curl);
+    // 拼装header链表
+    header_list = curl_slist_append(header_list, "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko");
+    header_list = curl_slist_append(header_list, "Content-Type:application/json; charset=UTF-8");
+    if (!header_list)
+    {
+        goto cleanup;
+    }
+
+    // 设置curl参数
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);
+    curl_easy_setopt(curl, CURLOPT_HEADER, 0L);
+    curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postParams.c_str());
+
+    // ssl
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+    // CURLOPT_VERBOSE的值为1时，会显示详细的调试信息
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, NULL);
+
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, req_reply);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response);
+
+    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+
+    // 发起请求
+    res = curl_easy_perform(curl);
+
+cleanup:
+    if (header_list)
+    {
+        curl_slist_free_all(header_list)
+    }
+    if (curl)
+    {
+        curl_easy_cleanup(curl);
+    }
+
     return res;
 }
 
@@ -67,15 +87,15 @@ std::string time_to_str()
 
 void test_curl_post_req()
 {
-    std::string URLStr = "http://internal.oss.7x-networks.net/matrix/oauth/token?"; // 设置URL
+    std::string URLStr = ""; // 设置URL
 
     string strjson;
 
-    strjson = "client_id=browser&";
-    strjson += "client_secret=b7n3i7kzg22y3p035rw3rd9sfzvs4cv0&";
-    strjson += "grant_type=password&";
-    strjson += "password=0671313d02169fd0aff7a9d32551b83d&";
-    strjson += "username=matrix";
+    strjson = "";
+    strjson += "";
+    strjson += "=&";
+    strjson += "=&";
+    strjson += "=";
 
     Json::FastWriter wrInfo;
     Json::Value wrValue;
@@ -102,9 +122,9 @@ void test_curl_post_req()
         return;
     }
 
-    //cout << value.toStyledString() << endl;
-    //Json::FastWriter writer;
-    //cout << writer.write(value) << endl;
+    // cout << value.toStyledString() << endl;
+    // Json::FastWriter writer;
+    // cout << writer.write(value) << endl;
 
     std::string access_token = value["access_token"].asString();
     std::string refresh_token = value["refresh_token"].asString();
@@ -119,7 +139,8 @@ void test_curl_post_req()
 
 int main()
 {
+    curl_global_init(CURL_GLOBAL_ALL);
     test_curl_post_req();
-
+    curl_global_cleanup(CURL_GLOBAL_ALL);
     return 0;
 }
